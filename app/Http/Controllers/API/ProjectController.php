@@ -63,6 +63,4 @@ class ProjectController extends Controller
             'message' => 'Successfully deleted project!',
         ], 201);
     }
-
-    //
 }
