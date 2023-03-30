@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Resume;
 use Illuminate\Http\Request;
+use Validator;
 
 class ResumeController extends Controller
 {
@@ -16,44 +17,59 @@ class ResumeController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string',
-            'phone' => 'required|string',
-            'address' => 'required|string',
-            'summary' => 'required|string',
-            'user_id' => 'required|integer',
+        $validators = Validator::make($request->all(),[
+            'title' => 'required',
+            'summery' => 'required',
+            'template_id' => 'required',
         ]);
-        $resume = new Resume([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'summary' => $request->summary,
-            'user_id' => $request->user_id,
-        ]);
-        $resume->save();
-        return response()->json([
-            'message' => 'Successfully created resume!',
-        ], 201);
+
+        if($validators->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validators->errors()->all(),
+            ]);
+        }
+
+        try {
+            $resume = new Resume();
+            $resume->title = $request->title;
+            $resume->summery = $request->summery;
+            $resume->template_id = $request->template_id;
+            $resume->user_id = auth()->user()->id;
+
+            $resume->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully created resume!',
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function show($id)
     {
-        $resume = Resume::find($id);
+        $resume = Resume::with('user', 'experiences', 'educations', 'skills', 'projects')->find($id);
         return response()->json($resume);
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string',
-            'phone' => 'required|string',
-            'address' => 'required|string',
-            'summary' => 'required|string',
-            'user_id' => 'required|integer',
+        $validators = Validator::make($request->all(),[
+            'title' => 'required',
+            'summery' => 'required',
+            'template_id' => 'required',
         ]);
+
+        if($validators->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validators->errors()->all(),
+            ]);
+        }
         $resume = Resume::find($id);
         $resume->update($request->all());
         return response()->json([
