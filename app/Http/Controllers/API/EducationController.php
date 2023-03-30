@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Education;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class EducationController extends Controller
@@ -12,6 +13,15 @@ class EducationController extends Controller
     public function getUserEductions($resumeId)
     {
 
+        $educations = auth()->user()->educations;
+        return response()->json([
+            'success' => true,
+            'data' => $educations,
+        ]);
+    }
+
+    public function getResumeEducations($resumeId)
+    {
         $educations = Education::where('resume_id', $resumeId)->get();
         return response()->json([
             'success' => true,
@@ -44,6 +54,7 @@ class EducationController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'resume_id' => $request->resume_id,
+            'user_id' => Auth::id(),
         ]);
         $education->save();
         return response()->json([

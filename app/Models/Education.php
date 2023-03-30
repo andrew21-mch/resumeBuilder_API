@@ -16,6 +16,7 @@ class Education extends Model
         'start_date',
         'end_date',
         'resume_id',
+        'user_id'
     ];
 
     // set table name to educations
