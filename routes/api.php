@@ -40,6 +40,13 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
 
+    Route::group(['prefix' => 'experiences'], function () {
+        Route::get('/', [ExperienceController::class, 'getUserExperiences']);
+        Route::post('/', [ExperienceController::class, 'store']);
+        Route::put('/{id}', [ExperienceController::class, 'update']);
+        Route::delete('/{id}', [ExperienceController::class, 'destroy']);
+    });
+
     Route::group(['prefix' => 'projects'], function () {
         Route::get('/', [ProjectController::class, 'index']);
         Route::post('/', [ProjectController::class, 'store']);
@@ -54,12 +61,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
         Route::delete('/{id}', [ProfileController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'experiences'], function () {
-        Route::get('/', [ExperienceController::class, 'index']);
-        Route::post('/', [ExperienceController::class, 'store']);
-        Route::put('/{id}', [ExperienceController::class, 'update']);
-        Route::delete('/{id}', [ExperienceController::class, 'destroy']);
-    });
+
 
     Route::group(['prefix' => 'skills'], function () {
         Route::get('/', [SkillController::class, 'index']);
@@ -83,7 +85,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
     });
 
     Route::group(['prefix' => 'educations'], function () {
-        Route::get('/', [EducationController::class, 'index']);
+        Route::get('/', [EducationController::class, 'getUserEductions']);
         Route::post('/', [EducationController::class, 'store']);
         Route::put('/{id}', [EducationController::class, 'update']);
         Route::delete('/{id}', [EducationController::class, 'destroy']);

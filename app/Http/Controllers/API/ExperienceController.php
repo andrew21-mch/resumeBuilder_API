@@ -7,8 +7,16 @@ use Illuminate\Http\Request;
 
 class ExperienceController extends Controller
 {
-    public function index()
+    public function getUserExperiences()
     {
+        if(!auth()->user()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+
 
     }
 
@@ -33,5 +41,5 @@ class ExperienceController extends Controller
 
     }
 
-    
+
 }
