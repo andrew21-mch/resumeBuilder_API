@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -35,6 +36,8 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
+
+
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
 
     Route::group(['prefix' => 'projects'], function () {
@@ -42,6 +45,13 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
         Route::post('/', [ProjectController::class, 'store']);
         Route::put('/{id}', [ProjectController::class, 'update']);
         Route::delete('/{id}', [ProjectController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('/', [ProfileController::class, 'getProfile']);
+        Route::post('/', [ProfileController::class, 'storeProfile']);
+        Route::put('/{id}', [ProfileController::class, 'updateProfile']);
+        Route::delete('/{id}', [ProfileController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'experiences'], function () {
