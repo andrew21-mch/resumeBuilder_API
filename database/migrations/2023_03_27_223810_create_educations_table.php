@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('activities')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('resume_id')->constrained('resumes');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

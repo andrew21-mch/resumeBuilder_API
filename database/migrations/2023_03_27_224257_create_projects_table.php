@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('live_link')->nullable();
             $table->json('json_data')->nullable();
             $table->foreignId('resume_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

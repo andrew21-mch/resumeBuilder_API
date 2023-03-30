@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('expiration_date')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('resume_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

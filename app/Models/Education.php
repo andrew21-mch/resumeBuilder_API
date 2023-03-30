@@ -20,6 +20,11 @@ class Education extends Model
 
     // set table name to educations
     protected $table = 'educations';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function resume()
     {
         return $this->belongsTo(Resume::class);

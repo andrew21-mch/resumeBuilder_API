@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('level')->nullable();
             $table->foreignId('resume_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
