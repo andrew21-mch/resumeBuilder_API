@@ -9,17 +9,17 @@ use Validator;
 
 class ResumeController extends Controller
 {
-    public function index()
+    public function getUserResume()
     {
-        $resumes = Resume::all();
-        return response()->json($resumes);
+        $resume = Resume::with('user', 'experiences', 'skills', 'projects', 'educations')->where('user_id', auth()->user()->id)->get();
+        return response()->json($resume);
     }
 
     public function store(Request $request)
     {
         $validators = Validator::make($request->all(),[
             'title' => 'required',
-            'summery' => 'required',
+            'summary' => 'required',
             'template_id' => 'required',
         ]);
 
@@ -33,7 +33,7 @@ class ResumeController extends Controller
         try {
             $resume = new Resume();
             $resume->title = $request->title;
-            $resume->summery = $request->summery;
+            $resume->summary = $request->summary;
             $resume->template_id = $request->template_id;
             $resume->user_id = auth()->user()->id;
 

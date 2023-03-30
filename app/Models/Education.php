@@ -18,6 +18,8 @@ class Education extends Model
         'resume_id',
     ];
 
+    // set table name to educations
+    protected $table = 'educations';
     public function resume()
     {
         return $this->belongsTo(Resume::class);

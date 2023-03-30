@@ -71,7 +71,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
     });
 
     Route::group(['prefix' => 'resumes'], function () {
-        Route::get('/', [ResumeController::class, 'index']);
+        Route::get('/', [ResumeController::class, 'getUserResume']);
         Route::post('/', [ResumeController::class, 'store']);
         Route::put('/{id}', [ResumeController::class, 'update']);
         Route::delete('/{id}', [ResumeController::class, 'destroy']);
@@ -85,7 +85,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
     });
 
     Route::group(['prefix' => 'educations'], function () {
-        Route::get('/', [EducationController::class, 'getUserEductions']);
+        Route::get('/resume/{resumeId}', [EducationController::class, 'getUserEductions']);
         Route::post('/', [EducationController::class, 'store']);
         Route::put('/{id}', [EducationController::class, 'update']);
         Route::delete('/{id}', [EducationController::class, 'destroy']);

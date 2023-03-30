@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class EducationController extends Controller
 {
-    public function getUserEductions()
+    public function getUserEductions($resumeId)
     {
-        $educations = auth()->user()->educations;
+
+        $educations = Education::where('resume_id', $resumeId)->get();
         return response()->json([
             'success' => true,
             'data' => $educations,
