@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class EducationController extends Controller
 {
-    public function getUserEductions($resumeId)
+    public function getUserEductions()
     {
 
         $educations = auth()->user()->educations;
@@ -125,22 +125,4 @@ class EducationController extends Controller
             'message' => 'Successfully deleted education!',
         ], 201);
     }
-
-    public function getResumeEductions($resumeId)
-    {
-        $userEductions = auth()->user()->resumes()->education::where('resume_id', $resumeId)->get();
-        if(!$userEductions){
-            return response()->json([
-                'success' => false,
-                'message' => 'no eductions found for this resume',
-                'data' => $userEductions,
-            ]);
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $userEductions
-        ]);
-    }
-
 }
