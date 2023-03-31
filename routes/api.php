@@ -66,7 +66,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
 
 
     Route::group(['prefix' => 'skills'], function () {
-        Route::get('/', [SkillController::class, 'index']);
+        Route::get('/', [SkillController::class, 'getUserSkills']);
+        Route::get('/resume/{id}', [SkillController::class, 'getResumeSkills']);
         Route::post('/', [SkillController::class, 'store']);
         Route::put('/{id}', [SkillController::class, 'update']);
         Route::delete('/{id}', [SkillController::class, 'destroy']);
@@ -74,6 +75,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
 
     Route::group(['prefix' => 'resumes'], function () {
         Route::get('/', [ResumeController::class, 'getUserResume']);
+        Route::get('/{id}', [ResumeController::class, 'show']);
         Route::post('/', [ResumeController::class, 'store']);
         Route::put('/{id}', [ResumeController::class, 'update']);
         Route::delete('/{id}', [ResumeController::class, 'destroy']);

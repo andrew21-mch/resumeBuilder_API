@@ -5,30 +5,68 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SkillController extends Controller
 {
     //
 
-    public function index()
+    public function getUserSkills()
     {
-        $skills = Skill::all();
-        return response()->json($skills);
+        $skills = auth()->user()->skills;
+        return response()->json([
+            'success' => true,
+            'data' => $skills,
+        ]);
     }
 
+    public function getResumeSkills($id)
+    {
+        if(!auth()->user()->resumes->contains($id)){
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to view this resume',
+            ]);
+        }
+
+        $skills = Skill::where('resume_id', $id)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $skills,
+        ]);
+    }
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'resume_id' => 'required|integer',
         ]);
-        $skill = new Skill([
-            'name' => $request->name,
-            'resume_id' => $request->resume_id,
-        ]);
-        $skill->save();
-        return response()->json([
-            'message' => 'Successfully created skill!',
-        ], 201);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->all(),
+            ]);
+        }
+
+        try
+        {
+            $skill = new Skill([
+                'name' => $request->name,
+                'resume_id' => $request->resume_id,
+                'user_id' => auth()->user()->id,
+            ]);
+            $skill->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully created skill!',
+                'data' => Skill::where('resume_id', $request->resume_id)->pluck('name', 'id'),
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

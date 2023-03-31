@@ -12,6 +12,7 @@ class Skill extends Model
     protected $fillable = [
         'name',
         'resume_id',
+        'user_id',
     ];
 
     public function user()
