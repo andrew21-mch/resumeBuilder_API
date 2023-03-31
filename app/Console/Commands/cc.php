@@ -33,7 +33,6 @@ class cc extends Command
         foreach ($controllers as $controller) {
             $controller = trim($controller);
             $this->call('make:controller', [
-                // create the controller inside the app/Http/Controllers/API folder
                 'name' => 'API/'.$controller.'Controller',
             ]);
         }

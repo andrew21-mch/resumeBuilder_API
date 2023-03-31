@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -94,5 +95,13 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
         Route::post('/', [EducationController::class, 'store']);
         Route::put('/{id}', [EducationController::class, 'update']);
         Route::delete('/{id}', [EducationController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'templates'], function () {
+        Route::get('/', [TemplateController::class, 'getTemplates']);
+        Route::get('/{id}', [TemplateController::class, 'getTemplate']);
+        Route::post('/', [TemplateController::class, 'store']);
+        Route::put('/{id}', [TemplateController::class, 'update']);
+        Route::delete('/{id}', [TemplateController::class, 'destroy']);
     });
 });

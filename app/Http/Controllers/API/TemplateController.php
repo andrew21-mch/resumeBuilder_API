@@ -12,13 +12,19 @@ class TemplateController extends Controller
     public function getTemplate($id)
     {
         $template = Template::find($id);
-        return response()->json($template);
+        return response()->json([
+            'success' => true,
+            'data' => $template
+        ]);
     }
 
     public function getTemplates()
     {
         $templates = Template::all();
-        return response()->json($templates);
+        return response()->json([
+            'success' => true,
+            'data' => $templates
+        ]);
     }
 
     public function store(Request $request)
@@ -26,7 +32,7 @@ class TemplateController extends Controller
         $validators = Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required|string',
-            'image' => 'required|string',
+            'content' => 'required|string',
         ]);
 
         if($validators->fails()){
@@ -35,25 +41,16 @@ class TemplateController extends Controller
                 'message' => $validators->errors()->all(),
             ]);
         }
-
-        // store the image to the server
-        $image = $request->image;
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = time() . '.png';
-        \File::put(public_path() . '/images/' . $imageName, base64_decode($image));
-
         try {
             $template = new Template();
             $template->name = $request->name;
             $template->description = $request->description;
-            $template->preview_image = $imageName;
-            $template->json_data = $request->json_data;
-
+            $template->content = $request->content;
             $template->save();
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully created template!',
+                'template' => $template
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
