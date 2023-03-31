@@ -5,16 +5,35 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
-    public function index()
+    public function getUserProjects()
     {
-        $projects = Project::all();
-        return response()->json($projects);
+        $projects = auth()->user()->projects;
+        return response()->json([
+            'success' => true,
+            'data' => $projects,
+        ]);
     }
 
+    public function getResumeProjects($id)
+    {
+        if(!auth()->user()->resumes->contains($id)){
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to view this resume',
+            ]);
+        }
+
+        $project = Project::where('resume_id', $id)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $project,
+        ]);
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -37,7 +56,8 @@ class ProjectController extends Controller
                 'end_date' => $request->end_date,
                 'live_link' => $request->live_link,
                 'github_link' => $request->github_link,
-                'user_id' => $request->user_id,
+                'user_id' => Auth::id(),
+                'resume_id' => $request->resume_id,
             ]);
             $project->save();
             return response()->json([

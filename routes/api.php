@@ -42,13 +42,15 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
 
     Route::group(['prefix' => 'experiences'], function () {
         Route::get('/', [ExperienceController::class, 'getUserExperiences']);
+        Route::get('resume/{id}', [ExperienceController::class, 'getResumeExperiences']);
         Route::post('/', [ExperienceController::class, 'store']);
         Route::put('/{id}', [ExperienceController::class, 'update']);
         Route::delete('/{id}', [ExperienceController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'projects'], function () {
-        Route::get('/', [ProjectController::class, 'index']);
+        Route::get('/', [ProjectController::class, 'getUserProjects']);
+        Route::get('resume/{id}', [ProjectController::class, 'getResumeProjects']);
         Route::post('/', [ProjectController::class, 'store']);
         Route::put('/{id}', [ProjectController::class, 'update']);
         Route::delete('/{id}', [ProjectController::class, 'destroy']);

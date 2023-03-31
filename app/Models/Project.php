@@ -16,6 +16,9 @@ class Project extends Model
         'image',
         'github',
         'resume_id',
+        'user_id',
+        'start_date',
+        'end_date',
     ];
 
     public function user()

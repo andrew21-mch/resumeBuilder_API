@@ -11,11 +11,12 @@ class Experience extends Model
 
     protected $fillable = [
         'company',
-        'position',
+        'title',
         'description',
         'start_date',
         'end_date',
         'resume_id',
+        'user_id'
     ];
 
     public function user()
