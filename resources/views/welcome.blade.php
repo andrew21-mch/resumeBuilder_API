@@ -59,6 +59,13 @@
             background-color: #0d6efd;
             border-color: #0d6efd;
         }
+
+        @media (max-width: 768px) {
+            .btn-primary {
+                background-color: #0d6efd;
+                border-color: #0d6efd;
+            }
+        }
     </style>
 
 </head>
@@ -88,7 +95,7 @@
         </div>
     </nav>
     <div class="container mt-9">
-        <div class="row m-5">
+        <div class="row m-2">
             <div class="col-md-6">
                 <h1 class="display-4">Resulab</h1>
                 <p class="lead">
@@ -103,7 +110,7 @@
             </div>
         </div>
         {{-- docs --}}
-        <div class="row m-5" id="docs">
+        <div class="row m-2" id="docs">
             <div class="col-md-6">
                 {{-- svg for docs --}}
                 <img src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YXBpfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
@@ -126,7 +133,7 @@
     <div class="team container-fluid bg-light" id="contact">
         <h2 class="text-center m-auto mt-5">Our Team</h2>
         <hr class="w-25 mx-auto">
-        <div class="row m-5">
+        <div class="row m-2">
             <div class="col-md-3">
                 <img src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YXBpfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
                     alt="" class="img-fluid img-thumbnail">
@@ -162,7 +169,7 @@
             directly. Our team will come back to you within
             a matter of hours to help you.</p>
 
-        <div class="row m-5 shadow-lg p-3 mb-5 bg-white rounded p-5">
+        <div class="row m-2 shadow-lg p-3 mb-5 bg-white rounded p-5">
 
             <!--Grid column-->
             <div class="col-md-9 mb-md-0 mb-5">
