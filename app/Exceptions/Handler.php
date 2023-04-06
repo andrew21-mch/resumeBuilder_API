@@ -2,8 +2,23 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Psr\Log\LogLevel;
+use Illuminate\Support\Arr;
+use Illuminate\Http\JsonResponse;
+use Doctrine\DBAL\Query\QueryException;
+use Doctrine\DBAL\Driver\PDO\PDOException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,5 +59,168 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+
+    public function render($request, Throwable $exception): JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+    {
+        if ($exception instanceof HttpException) {
+            // check if its authentication exception
+            if ($exception->getStatusCode() == 401) {
+                return response()->json([
+                    'error' => 'unauthenticated',
+                    'success' => false,
+                    'message' => 'sorry, you are not authenticated'
+                ], 401);
+            }
+
+            // check if its authorization exception
+            if ($exception->getStatusCode() == 403) {
+                return response()->json([
+                    'error' => 'unauthorized',
+                    'success' => false,
+                    'message' => 'sorry, you are not authorized'
+                ], 403);
+            }
+
+            // check if its not found exception
+            if ($exception->getStatusCode() == 404) {
+                return response()->json([
+                    'error' => 'not found',
+                    'success' => false,
+                    'message' => 'sorry, the resource you are looking for is not found'
+                ], 404);
+            }
+        }
+
+        if ($exception instanceof RouteNotFoundException) {
+            return response()->json([
+                'error' => 'not found',
+                'success' => false,
+                'message' => 'sorry, the resource you are looking for is not found'
+            ], 404);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json([
+                'error' => 'not found',
+                'success' => false,
+                'message' => 'sorry, the resource you are looking for is not found'
+            ], 404);
+        }
+
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->json([
+                'error' => 'not found',
+                'success' => false,
+                'message' => 'sorry, the resource you are looking for is not found'
+            ], 404);
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return response()->json([
+                'error' => 'method not allowed',
+                'success' => false,
+                'message' => 'sorry, the method you are using is not allowed'
+            ], 405);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    protected function unauthorized($request, AuthorizationException $exception)
+    {
+        return response()->json([
+            'error' => 'unauthorized',
+            'success' => false,
+            'message' => 'sorry, you are not authorized'
+        ], 403);
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return response()->json([
+            'error' => 'unauthenticated',
+            'success' => false,
+            'message' => 'sorry, you are not authenticated'
+        ], 401);
+    }
+
+    protected function prepareJsonResponse($request, Throwable $e): JsonResponse
+    {
+        return new JsonResponse(
+            $this->convertExceptionToArray($e),
+            $this->isHttpException($e) ? $e->getStatusCode() : 500,
+            $this->isHttpException($e) ? $e->getHeaders() : [],
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+        );
+    }
+
+    protected function convertExceptionToArray(Throwable $e): array
+    {
+        return config('app.debug') ? [
+            'message' => $e->getMessage(),
+            'exception' => get_class($e),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => collect($e->getTrace())->map(function ($trace) {
+                return Arr::except($trace, ['args']);
+            })->all(),
+        ] : [
+            'message' => $this->isHttpException($e) ? $e->getMessage() : 'Server Error',
+        ];
+    }
+
+    protected function prepareResponse($request, Throwable $e): JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+    {
+        if ($e instanceof ValidationException && $e->response) {
+            return $e->response;
+        }
+
+        if ($e instanceof HttpResponseException) {
+            return $e->getResponse();
+        }
+
+        if ($e instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $e);
+        }
+
+        if ($e instanceof AuthorizationException) {
+            return $this->unauthorized($request, $e);
+        }
+
+        if ($e instanceof ModelNotFoundException) {
+            $e = new NotFoundHttpException($e->getMessage(), $e);
+        }
+
+        if ($e instanceof TokenMismatchException) {
+            return redirect()->back()->withInput($request->input());
+        }
+
+        if ($e instanceof ValidationException && $e->getResponse()) {
+            return $e->getResponse();
+        }
+
+        if ($e instanceof ValidationException) {
+            return $this->convertValidationExceptionToResponse($e, $request);
+        }
+
+        if ($this->isHttpException($e)) {
+            return $this->toIlluminateResponse($this->renderHttpException($e), $e);
+        }
+
+        if ($e instanceof QueryException) {
+            return $this->prepareResponse($request, new HttpException(500, $e->getMessage()));
+        }
+
+        if ($e instanceof PDOException) {
+            return $this->prepareResponse($request, new HttpException(500, $e->getMessage()));
+        }
+
+        if ($e instanceof FatalThrowableError) {
+            return $this->prepareResponse($request, new HttpException(500, $e->getMessage()));
+        }
+
+        return $this->prepareJsonResponse($request, $e);
     }
 }
