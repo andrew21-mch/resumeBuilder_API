@@ -230,15 +230,15 @@
             <!--Grid column-->
             <div class="col-md-3 text-center">
                 <ul class="list-unstyled mb-0">
-                    <li><i class="fas fa-map-marker-alt fa-2x"></i>
+                    <li><i class="fas fa-map-marker-alt fa-2x text-warning"></i>
                         <p>Bamenda, Cameroon</p>
                     </li>
 
-                    <li><i class="fas fa-phone mt-4 fa-2x"></i>
+                    <li><i class="fas fa-phone mt-4 fa-2x text-success"></i>
                         <p>+ 237 681 610 98</p>
                     </li>
 
-                    <li><i class="fas fa-envelope mt-4 fa-2x"></i>
+                    <li><i class="fas fa-envelope mt-4 fa-2x text-danger"></i>
                         <p>info@resulab.com</p>
                     </li>
                 </ul>
