@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Support\Facades\Response;
 use Throwable;
 use Psr\Log\LogLevel;
 use Illuminate\Support\Arr;
@@ -171,7 +172,7 @@ class Handler extends ExceptionHandler
         ];
     }
 
-    protected function prepareResponse($request, Throwable $e): JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+    protected function prepareResponse($request, Throwable $e): JsonResponse|\Illuminate\Support\Facades\Response|\Symfony\Component\HttpFoundation\Response
     {
         if ($e instanceof ValidationException && $e->response) {
             return $e->response;
