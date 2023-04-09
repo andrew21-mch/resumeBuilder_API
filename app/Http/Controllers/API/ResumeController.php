@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Resume;
+use App\Models\Template;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -30,6 +31,14 @@ class ResumeController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validators->errors()->all(),
+            ]);
+        }
+
+        $template = Template::where('id', $request->template_id)->first();
+        if(!$template){
+            return response()->json([
+                'success' => false,
+                'message' => 'Template not found!',
             ]);
         }
 

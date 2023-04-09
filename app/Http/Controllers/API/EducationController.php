@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Education;
+use App\Models\Resume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -47,6 +48,13 @@ class EducationController extends Controller
             ]);
         }
 
+        $resume = Resume::where('id', $request->resume_id)->first();
+        if(!$resume){
+            return response()->json([
+                'success' => false,
+                'message' => 'Resume not found!',
+            ]);
+        }
         $education = new Education([
             'school' => $request->school,
             'degree' => $request->degree,

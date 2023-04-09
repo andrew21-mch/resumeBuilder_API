@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Resume;
 use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -49,6 +50,13 @@ class SkillController extends Controller
             ]);
         }
 
+        $resume = Resume::where('id', $request->resume_id)->first();
+        if(!$resume){
+            return response()->json([
+                'success' => false,
+                'message' => 'Resume not found!',
+            ]);
+        }
         try
         {
             $skill = new Skill([
