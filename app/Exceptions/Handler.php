@@ -4,7 +4,6 @@ namespace App\Exceptions;
 
 use Illuminate\Support\Facades\Response;
 use Throwable;
-use Psr\Log\LogLevel;
 use Illuminate\Support\Arr;
 use Illuminate\Http\JsonResponse;
 use Doctrine\DBAL\Query\QueryException;
