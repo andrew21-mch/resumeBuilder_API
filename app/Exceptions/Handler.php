@@ -126,6 +126,25 @@ class Handler extends ExceptionHandler
             ], 405);
         }
 
+        // check for unauthorized exception
+        if ($exception instanceof AuthorizationException) {
+            return response()->json([
+                'error' => 'unauthorized',
+                'success' => false,
+                'message' => 'sorry, you are not authorized'
+            ], 403);
+        }
+
+        // check for authentication exception
+        if ($exception instanceof AuthenticationException) {
+            return response()->json([
+                'error' => 'unauthenticated',
+                'success' => false,
+                'message' => 'sorry, you are not authenticated'
+            ], 401);
+        }
+
+
         return parent::render($request, $exception);
     }
 
