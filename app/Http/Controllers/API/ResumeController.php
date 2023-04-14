@@ -72,7 +72,7 @@ class ResumeController extends Controller
     {
         $validators = Validator::make($request->all(),[
             'title' => 'required',
-            'summery' => 'required',
+            'summary' => 'required',
             'template_id' => 'required',
         ]);
 
