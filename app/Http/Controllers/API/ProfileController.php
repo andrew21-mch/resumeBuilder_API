@@ -19,6 +19,13 @@ class ProfileController extends Controller
 
     public static function storeProfile(Request $request)
     {
+        $profile = $request->user()->profile;
+        if($profile) {
+            return response()->json([
+                'message' => 'profile already exists, use update instead',
+            ], 403);
+        }
+
         $user = $request->user();
         $profile = $user->profile()->create($request->all());
 
@@ -47,7 +54,7 @@ class ProfileController extends Controller
                 'message' => 'unauthorized, you can only update your own profile'
             ], 403);
         }
-        
+
         $profile = $user->profile()->find($id);
 
         if (!$profile) {
