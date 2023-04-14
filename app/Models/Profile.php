@@ -25,6 +25,8 @@ class Profile extends Model
         'facebook',
         'instagram',
         'youtube',
+        'gender',
+        'date_of_birth'
     ];
 
     public function user()
