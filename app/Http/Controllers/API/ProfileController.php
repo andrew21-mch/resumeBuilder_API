@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -67,6 +68,20 @@ class ProfileController extends Controller
 
         return response()->json([
             'profile' => $profile,
+        ], 200);
+    }
+
+    public function destroy($id){
+        $profile = Profile::find($id);
+        if(!$profile) {
+            return response()->json([
+                'message' => 'Profile not found',
+            ], 404);
+        }
+        $profile->delete();
+
+        return response()->json([
+            'message' => 'Profile deleted successfully',
         ], 200);
     }
 }
