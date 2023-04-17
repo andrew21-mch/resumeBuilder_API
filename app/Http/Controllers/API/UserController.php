@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    function setPassword(Request $request, $id){
+    function setPassword(Request $request, $id)
+    {
         $validators = Validator::make($request->all(), [
             'current_password' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
 
-        if($validators->fails()){
+        if ($validators->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => $validators->errors()
@@ -24,14 +25,14 @@ class UserController extends Controller
 
         $user = User::find($id);
 
-        if(!$user){
+        if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User account not found wit id: ' . $id
             ], 400);
         }
 
-        if(!\Hash::check($request->current_password, $user->password)){
+        if (!\Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Current password is incorrect'
@@ -46,6 +47,37 @@ class UserController extends Controller
             'message' => 'Password updated successfully',
             'user' => $user
         ], 200);
+
+    }
+
+    public function setUserLanguage(Request $request, $id)
+    {
+        $validators = Validator::make($request->all(), [
+            'language' => 'required',
+        ]);
+
+        if ($validators->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validators->errors()
+            ], 400);
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'user with account id: ' . $id . ' not foud',
+            ]);
+        }
+
+        $user->language = $request->language;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'user lanaguare successfully set to ' . $request->language ,
+        ]);
 
     }
 }
