@@ -43,7 +43,8 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Password updated successfully'
+            'message' => 'Password updated successfully',
+            'user' => $user
         ], 200);
 
     }
