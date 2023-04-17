@@ -65,6 +65,10 @@ class ProfileController extends Controller
         }
 
         $profile->update($request->all());
+        if($request->email){
+            $user->email = $request->email;
+            $user->save();
+        }
 
         return response()->json([
             'profile' => $profile,
