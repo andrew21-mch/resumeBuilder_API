@@ -87,6 +87,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
         Route::post('/', [UserController::class, 'store']);
         Route::put('/{id}', [UserController::class, 'update']);
         Route::delete('/{id}', [UserController::class, 'destroy']);
+        Route::put('/{id}/password', [UserController::class, 'setPassword']);
     });
 
     Route::group(['prefix' => 'educations'], function () {
