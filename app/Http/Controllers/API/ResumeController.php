@@ -12,7 +12,7 @@ class ResumeController extends Controller
 {
     public function getUserResume()
     {
-        $resume = Resume::with('user.profile', 'experiences', 'skills', 'projects', 'educations')->where('user_id', auth()->user()->id)->get();
+        $resume = Resume::with('user.profile', 'experiences', 'skills', 'projects', 'educations', 'certifications')->where('user_id', auth()->user()->id)->get();
         return response()->json([
             'success' => true,
             'data' => $resume
@@ -64,7 +64,7 @@ class ResumeController extends Controller
 
     public function show($id)
     {
-        $resume = Resume::with('user.profile', 'experiences', 'educations', 'skills', 'projects')->find($id);
+        $resume = Resume::with('user.profile', 'experiences', 'educations', 'skills', 'projects', 'certifications')->find($id);
         return response()->json($resume);
     }
 
