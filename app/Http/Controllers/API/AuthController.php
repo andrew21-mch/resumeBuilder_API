@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Validator;
@@ -25,16 +25,33 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-        $user->save();
+        try{
+            $user = new User([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
+
+            $user->save();
+
+            $profile = new Profile([
+                'email' => $user->email,
+                'first_name' => explode(' ', $user->name)[0],
+                'last_name' => explode(' ', $user->name)[1],
+                'user_id' => $user->id,
+            ]);
+            $profile->save();
+
         return response()->json([
             'message' => 'Successfully created user!',
             'user' => $user,
         ], 201);
+    }catch(\Exception $e){
+        return response()->json([
+            'success' => false,
+            'message' => 'an error occured '. $e->getMessage(),
+        ]);
+    }
     }
 
     public function login(Request $request)
