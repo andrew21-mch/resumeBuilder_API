@@ -53,6 +53,7 @@ class ResumeController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully created resume!',
+                'resume' => $resume
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
