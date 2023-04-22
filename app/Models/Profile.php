@@ -28,7 +28,8 @@ class Profile extends Model
         'instagram',
         'youtube',
         'gender',
-        'date_of_birth'
+        'date_of_birth',
+        'user_id'
     ];
 
     public function user()
