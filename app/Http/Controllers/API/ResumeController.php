@@ -92,10 +92,39 @@ class ResumeController extends Controller
 
     public function destroy($id)
     {
-        $resume = Resume::find($id);
+        $resume = Resume::with('experiences', 'educations', 'skills', 'projects', 'certifications')->find($id);
+        if(!$resume){
+            return response()->json([
+                'success' => false,
+                'message' => 'resume not found with id: ' . $id,
+            ], 201);
+        }
+
+        try {
+            $this->deleteResume($resume);
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully deleted resume!',
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function deleteResume($resume)
+    {
+        $resume->experiences()->delete();
+        $resume->educations()->delete();
+        $resume->skills()->delete();
+        $resume->projects()->delete();
+        $resume->certifications()->delete();
+
         $resume->delete();
-        return response()->json([
-            'message' => 'Successfully deleted resume!',
-        ], 201);
+
+        return true;
+
     }
 }
