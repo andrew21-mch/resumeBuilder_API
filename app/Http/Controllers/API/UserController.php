@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -32,14 +33,14 @@ class UserController extends Controller
             ], 400);
         }
 
-        if (!\Hash::check($request->current_password, $user->password)) {
+        if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Current password is incorrect'
             ], 400);
         }
 
-        $user->password = \Hash::make($request->password);
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return response()->json([
