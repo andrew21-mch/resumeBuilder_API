@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Auth;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -26,10 +27,18 @@ class UserController extends Controller
 
         $user = User::find($id);
 
+
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User account not found wit id: ' . $id
+            ], 400);
+        }
+
+        if(Auth::id() != $user->id){
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access'
             ], 400);
         }
 
