@@ -34,13 +34,12 @@ class AuthController extends Controller
 
             $user->save();
 
-            $profile = new Profile([
-                'email' => $user->email,
+            $user->profile()->create([
                 'first_name' => explode(' ', $user->name)[0],
                 'last_name' => explode(' ', $user->name)[1],
+                'email' => $user->email,
                 'user_id' => $user->id,
             ]);
-            $profile->save();
 
         return response()->json([
             'message' => 'Successfully created user!',
