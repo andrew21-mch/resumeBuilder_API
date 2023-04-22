@@ -29,7 +29,7 @@ class AuthController extends Controller
             $user = new User([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
+                'password' => Hash::make($request->password),
             ]);
 
             $user->save();
