@@ -59,12 +59,15 @@ class SkillController extends Controller
         }
         try
         {
-            $skill = new Skill([
-                'name' => $request->name,
-                'resume_id' => $request->resume_id,
-                'user_id' => auth()->user()->id,
-            ]);
-            $skill->save();
+            $skills = explode(',', $request->name);
+            foreach ($skills as $skill) {
+                $skill = new Skill([
+                    'name' => $skill,
+                    'resume_id' => $request->resume_id,
+                    'user_id' => auth()->user()->id,
+                ]);
+                $skill->save();
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully created skill!',
@@ -76,5 +79,27 @@ class SkillController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function destroy($id)
+    {
+        $skill = Skill::find($id);
+        if (!$skill) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Skill not found!',
+            ], 400);
+        }
+        if ($skill->user_id != auth()->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to delete this skill!',
+            ], 400);
+        }
+        $skill->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully deleted skill!',
+        ], 200);
     }
 }
