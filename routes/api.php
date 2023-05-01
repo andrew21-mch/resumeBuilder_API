@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CertificationController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\TemplateController;
 use Illuminate\Http\Request;
