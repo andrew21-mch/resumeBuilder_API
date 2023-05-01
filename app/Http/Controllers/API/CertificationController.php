@@ -135,4 +135,32 @@ class CertificationController extends Controller
             ]);
         }
     }
+
+    public function destroy($id)
+    {
+        $certification = Certification::where('id', $id)->first();
+        if(!$certification){
+            return response()->json([
+                'success' => false,
+                'message' => 'Certification not found!',
+            ]);
+        }
+
+        try
+        {
+            $certification->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Certification deleted successfully!',
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Certification deletion failed!'.$e->getMessage(),
+            ]);
+        }
+    }
 }
