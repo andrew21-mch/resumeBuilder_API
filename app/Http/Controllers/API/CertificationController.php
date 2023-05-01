@@ -39,9 +39,8 @@ class CertificationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'certification_name' => 'required|string',
-            'certification_body' => 'required|string',
-            'certification_date' => 'required|date',
-            'certification_url' => 'required|string',
+            'organization' => 'required|string',
+            'issue_date' => 'required|date',
             'resume_id' => 'required|integer',
         ]);
 
@@ -65,9 +64,9 @@ class CertificationController extends Controller
                 [
                     'name' => $request->certification_name,
                     'organization' => $request->certification_body,
-                    'issue_date' => $request->certification_date,
-                    'expiration_date' => $request->certification_date,
-                    'description' => $request->certification_url,
+                    'issue_date' => $request->issue_date,
+                    'expiration_date' => $request->expiration_date,
+                    'description' => $request->description,
                     'resume_id' => $request->resume_id,
                     'user_id' => auth()->user()->id,
                 ]

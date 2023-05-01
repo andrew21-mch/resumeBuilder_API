@@ -17,6 +17,7 @@ class Certification extends Model
         'description',
         'resume_id',
         'user_id',
+        'url'
     ];
 
     public function user()
