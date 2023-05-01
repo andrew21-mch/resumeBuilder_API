@@ -63,7 +63,7 @@ class CertificationController extends Controller
             $certification = new Certification(
                 [
                     'name' => $request->certification_name,
-                    'organization' => $request->certification_body,
+                    'organization' => $request->organization,
                     'issue_date' => $request->issue_date,
                     'expiration_date' => $request->expiration_date,
                     'description' => $request->description,
@@ -83,7 +83,55 @@ class CertificationController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => 'Certification creation failed!',
+                'message' => 'Certification creation failed!'.$e->getMessage(),
+            ]);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $certification = Certification::where('id', $id)->first();
+        if(!$certification){
+            return response()->json([
+                'success' => false,
+                'message' => 'Certification not found!',
+            ]);
+        }
+
+        $resume = Resume::where('id', $request->resume_id)->first();
+        if(!$resume){
+            return response()->json([
+                'success' => false,
+                'message' => 'Resume not found!',
+            ]);
+        }
+
+        try
+        {
+            $certification->update(
+                [
+                    'name' => $request->certification_name,
+                    'organization' => $request->organization,
+                    'issue_date' => $request->issue_date,
+                    'expiration_date' => $request->expiration_date,
+                    'description' => $request->description,
+                    'resume_id' => $request->resume_id,
+                    'user_id' => auth()->user()->id,
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Certification updated successfully!',
+                'data' => $certification,
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Certification update failed!'.$e->getMessage(),
             ]);
         }
     }
