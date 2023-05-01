@@ -11,8 +11,12 @@ class Certification extends Model
 
     protected $fillable = [
         'name',
+        'organization',
+        'issue_date',
+        'expiration_date',
         'description',
         'resume_id',
+        'user_id',
     ];
 
     public function user()
