@@ -99,6 +99,14 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
         Route::delete('/{id}', [EducationController::class, 'destroy']);
     });
 
+    Route::group(['prefix' => 'certifications'], function () {
+        Route::get('/', [CertificationController::class, 'getUserCertifications']);
+        Route::get('/resume/{resumeId}', [CertificationController::class, 'getResumeCertifications']);
+        Route::post('/', [CertificationController::class, 'store']);
+        Route::put('/{id}', [CertificationController::class, 'update']);
+        Route::delete('/{id}', [CertificationController::class, 'destroy']);
+    });
+
     Route::group(['prefix' => 'templates'], function () {
         Route::get('/', [TemplateController::class, 'getTemplates']);
         Route::get('/{id}', [TemplateController::class, 'getTemplate']);
