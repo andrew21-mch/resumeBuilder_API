@@ -130,15 +130,7 @@ class ExperienceController extends Controller
 
         try
         {
-            $experience->title = $request->title;
-            $experience->company = $request->company;
-            $experience->location = $request->location;
-            $experience->start_date = $request->start_date;
-            $experience->end_date = $request->end_date;
-            $experience->resume_id = $request->resume_id;
-            $experience->user_id = Auth::id();
-
-            $experience->save();
+           $experience->update($request->all());
 
             return response()->json([
                 'success' => true,
