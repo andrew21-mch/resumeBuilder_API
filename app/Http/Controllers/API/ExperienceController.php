@@ -33,7 +33,6 @@ class ExperienceController extends Controller
         $validators = Validator::make($request->all(), [
             'title' => 'required|string',
             'company' => 'required|string',
-            'location' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'resume_id' => 'required|integer',
@@ -51,7 +50,6 @@ class ExperienceController extends Controller
             $experience = new Experience([
                 'title' => $request->title,
                 'company' => $request->company,
-                'location' => $request->location,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
                 'resume_id' => $request->resume_id,
@@ -106,7 +104,6 @@ class ExperienceController extends Controller
         $validators = Validator::make($request->all(), [
             'title' => 'required|string',
             'company' => 'required|string',
-            'location' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'resume_id' => 'required|integer',
