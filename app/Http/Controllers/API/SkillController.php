@@ -36,6 +36,21 @@ class SkillController extends Controller
             'data' => $skills,
         ]);
     }
+
+    public function show($id)
+    {
+        $skill = Skill::where('id', $id)->first();
+        if(!$skill){
+            return response()->json([
+                'success' => false,
+                'message' => 'Skill not found!',
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $skill,
+        ]);
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

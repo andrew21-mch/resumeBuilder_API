@@ -84,6 +84,12 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::find($id);
+        if(!$project){
+            return response()->json([
+                'success' => false,
+                'message' => 'Project not found!',
+            ]);
+        }
         return response()->json($project);
     }
 

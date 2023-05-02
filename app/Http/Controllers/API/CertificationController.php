@@ -35,6 +35,22 @@ class CertificationController extends Controller
         ]);
     }
 
+
+    public function show($id)
+    {
+        $certification = Certification::where('id', $id)->first();
+        if(!$certification){
+            return response()->json([
+                'success' => false,
+                'message' => 'Certification not found!',
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $certification,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

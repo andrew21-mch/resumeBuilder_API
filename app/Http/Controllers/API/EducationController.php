@@ -74,6 +74,12 @@ class EducationController extends Controller
     public function show($id)
     {
         $education = Education::find($id);
+        if (!$education) {
+            return response()->json([
+                'success' => false,
+                'message' => 'no education found with id ' . $id,
+            ]);
+        }
         return response()->json($education);
     }
 
