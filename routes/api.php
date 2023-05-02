@@ -44,6 +44,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function () {
 
     Route::group(['prefix' => 'experiences'], function () {
         Route::get('/', [ExperienceController::class, 'getUserExperiences']);
+        Route::get('/{id}', [ExperienceController::class, 'show']);
         Route::get('resume/{id}', [ExperienceController::class, 'getResumeExperiences']);
         Route::post('/', [ExperienceController::class, 'store']);
         Route::put('/{id}', [ExperienceController::class, 'update']);
