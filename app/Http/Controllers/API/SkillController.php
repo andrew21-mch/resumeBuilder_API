@@ -83,10 +83,12 @@ class SkillController extends Controller
                 ]);
                 $skill->save();
             }
+
+            $skills = Skill::where('resume_id', $request->resume_id)->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully created skill!',
-                'data' => Skill::where('resume_id', $request->resume_id)->pluck('name', 'id'),
+                'data' => $this->formatSkills($skills),
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -116,5 +118,17 @@ class SkillController extends Controller
             'success' => true,
             'message' => 'Successfully deleted skill!',
         ], 200);
+    }
+
+    public function formatSkills($skills)
+    {
+        $formattedSkills = [];
+        foreach ($skills as $skill) {
+            $formattedSkills[] = [
+                'id' => $skill->id,
+                'name' => $skill->name,
+            ];
+        }
+        return $formattedSkills;
     }
 }
