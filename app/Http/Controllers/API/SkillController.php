@@ -120,6 +120,53 @@ class SkillController extends Controller
         ], 200);
     }
 
+    public function update(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'resume_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->all(),
+            ]);
+        }
+
+        $skill = Skill::where('id', $id)->first();
+        if(!$skill){
+            return response()->json([
+                'success' => false,
+                'message' => 'Skill not found!',
+            ]);
+        }
+        if ($skill->user_id != auth()->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to update this skill!',
+            ], 400);
+        }
+        try
+        {
+            $skill->update([
+                'name' => $request->name,
+                'resume_id' => $request->resume_id,
+                'user_id' => auth()->user()->id,
+            ]);
+
+            $skills = Skill::where('resume_id', $request->resume_id)->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully updated skill!',
+                'data' => $this->formatSkills($skills),
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
     public function formatSkills($skills)
     {
         $formattedSkills = [];
