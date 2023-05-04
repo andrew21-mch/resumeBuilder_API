@@ -76,6 +76,9 @@ class SkillController extends Controller
         {
             $skills = explode(',', $request->name);
             foreach ($skills as $skill) {
+                if(Skill::where('name', $skill)->where('resume_id', $request->resume_id)->first()){
+                    continue;
+                }
                 $skill = new Skill([
                     'name' => $skill,
                     'resume_id' => $request->resume_id,
