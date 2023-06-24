@@ -80,6 +80,8 @@ class TemplateController extends Controller
             $template = Template::find($id);
             $template->name = $request->name;
             $template->description = $request->description;
+            $template->content = $request->content;
+            $template->image_url = $request->image;
 
             $template->save();
             return response()->json([
