@@ -98,8 +98,13 @@ class TemplateController extends Controller
 
     public function destroy($id)
     {
-        $template = Template::with('resumes')->find($id);
+        $template = Template::with('resumes.certifications', 'resumes.educations', 'resumes.projects', 'resumes.experiences', 'resumes.skills')->find($id);
         try {
+            $template->resumes()->certifications()->delete();
+            $template->resumes()->educations()->delete();
+            $template->resumes()->projects()->delete();
+            $template->resumes()->experiences()->delete();
+            $template->resumes()->skills()->delete();
             $template->resumes()->delete();
             $template->delete();
             return response()->json([
