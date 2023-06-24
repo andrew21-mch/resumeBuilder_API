@@ -35,7 +35,7 @@ class TemplateController extends Controller
             'content' => 'required|string',
         ]);
 
-        if($validators->fails()){
+        if ($validators->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => $validators->errors()->all(),
@@ -65,10 +65,9 @@ class TemplateController extends Controller
         $validators = Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required|string',
-            'image' => 'required|string',
         ]);
 
-        if($validators->fails()){
+        if ($validators->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => $validators->errors()->all(),
@@ -76,18 +75,20 @@ class TemplateController extends Controller
         }
 
         // store the image to the server
-        $image = $request->image;
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = time() . '.png';
-        \File::put(public_path() . '/images/' . $imageName, base64_decode($image));
+        $imageName = '';
+        if ($request->image) {
+            $image = $request->image;
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = time() . '.png';
+            \File::put(public_path() . '/images/' . $imageName, base64_decode($image));
+        }
 
         try {
             $template = Template::find($id);
             $template->name = $request->name;
             $template->description = $request->description;
             $template->preview_image = $imageName;
-            $template->json_data = $request->json_data;
 
             $template->save();
             return response()->json([
