@@ -99,18 +99,20 @@ class TemplateController extends Controller
     public function destroy($id)
     {
         try {
-            $template = Template::find($id);
-            $template->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'Successfully deleted template!',
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+            $template = Template::with('resumes')->find($id);
+            try {
+                $template->resumes()->delete();
+                $template->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Successfully deleted template!',
+                ], 201);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 500);
+            }
     }
 
 
