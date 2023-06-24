@@ -74,21 +74,12 @@ class TemplateController extends Controller
             ]);
         }
 
-        // store the image to the server
-        $imageName = '';
-        if ($request->image) {
-            $image = $request->image;
-            $image = str_replace('data:image/png;base64,', '', $image);
-            $image = str_replace(' ', '+', $image);
-            $imageName = time() . '.png';
-            \File::put(public_path() . '/images/' . $imageName, base64_decode($image));
-        }
+        // store the image to the serve
 
         try {
             $template = Template::find($id);
             $template->name = $request->name;
             $template->description = $request->description;
-            $template->preview_image = $imageName;
 
             $template->save();
             return response()->json([
