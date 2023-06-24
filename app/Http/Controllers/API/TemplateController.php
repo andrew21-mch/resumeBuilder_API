@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Certification;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -98,13 +99,9 @@ class TemplateController extends Controller
 
     public function destroy($id)
     {
-        $template = Template::with('resumes.certifications', 'resumes.educations', 'resumes.projects', 'resumes.experiences', 'resumes.skills')->find($id);
+        $template = Template::with('resumes')->find($id);
+
         try {
-            $template->resumes()->certifications()->delete();
-            $template->resumes()->educations()->delete();
-            $template->resumes()->projects()->delete();
-            $template->resumes()->experiences()->delete();
-            $template->resumes()->skills()->delete();
             $template->resumes()->delete();
             $template->delete();
             return response()->json([
